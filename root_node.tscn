@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://cw3t51s6rf6bf"]
+
+[ext_resource type="Script" path="res://RootNode.gd" id="1_nmyyx"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_h06dq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5sp3b"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_7exse"]
+
+[sub_resource type="Environment" id="Environment_jvhoa"]
+ambient_light_source = 2
+ambient_light_color = Color(0.411765, 0.411765, 0.411765, 1)
+
+[node name="RootNode" type="Node3D"]
+script = ExtResource("1_nmyyx")
+MY_MESH = SubResource("TorusMesh_h06dq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_5sp3b")
+mesh = SubResource("ArrayMesh_7exse")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.69079)
+environment = SubResource("Environment_jvhoa")
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.00898153, 0.774161, -0.632925, -0.0109846, 0.632989, 0.774083, 0.999899, -4.65708e-10, 0.0141891, -6.55135, 2.49434, 0)
