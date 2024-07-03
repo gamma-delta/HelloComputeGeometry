@@ -21,16 +21,17 @@ layout(push_constant, std430) uniform Params {
   float _scratch;
 } PARAMS;
 
+// increase by 1 because the image is indexed in vec4s
 #define WRITE_VEC4(IDX, V) { \
     imageStore(IMAGE_OUT, ivec2(IDX % PARAMS.out_tex_width, IDX / PARAMS.out_tex_width), V); \
-    IDX += 4;}
+    IDX += 1;}
 #define WRITE_VERTEX(IDX, VERT) { \
     WRITE_VEC4(IDX, VERT.position); \
     WRITE_VEC4(IDX, VERT.normal); \
     WRITE_VEC4(IDX, vec4(VERT.uv, VERT._scratch)); }
 
 void writeTriangle(uint index, Triangle tri) {
-  uint floatIdx = SIZEOF_TRIANGLE * index;
+  uint floatIdx = SIZEOF_TRIANGLE / 4 * index;
 
   WRITE_VERTEX(floatIdx, tri.verts[0]);
   WRITE_VERTEX(floatIdx, tri.verts[1]);
@@ -47,7 +48,6 @@ void main() {
   Triangle tri = DATA_IN.tris[gl_GlobalInvocationID.x];
   for (int i = 0; i < 3; i++) {
     tri.verts[i].position += vec4(0.0, 1.0, 0.0, 0.0) * cos(PARAMS.time);
-    tri.verts[i].normal = cos(PARAMS.time) > 0.0 ? vec4(1.0, 0.0, 0.0, 1.0) : vec4(0.0, 1.0, 1.0, 1.0);
   }
   writeTriangle(gl_GlobalInvocationID.x, tri);
 

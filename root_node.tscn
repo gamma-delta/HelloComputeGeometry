@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cw3t51s6rf6bf"]
+[gd_scene load_steps=7 format=3 uid="uid://cw3t51s6rf6bf"]
 
 [ext_resource type="Script" path="res://RootNode.gd" id="1_nmyyx"]
 [ext_resource type="Shader" path="res://shaders/display_image.gdshader" id="2_baoxi"]
+[ext_resource type="Script" path="res://FreeLookCamera.gd" id="2_vtr0j"]
 
 [sub_resource type="TorusMesh" id="TorusMesh_h06dq"]
 
@@ -22,6 +23,7 @@ DISPLAY_MESH = NodePath("DisplayMesh")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.69079)
 environment = SubResource("Environment_jvhoa")
 current = true
+script = ExtResource("2_vtr0j")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.00898153, 0.774161, -0.632925, -0.0109846, 0.632989, 0.774083, 0.999899, -4.65708e-10, 0.0141891, -6.55135, 2.49434, 0)
