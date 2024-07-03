@@ -4,7 +4,7 @@ uniform sampler2D data_in : source_color;
 
 vec4 read_vec4(inout int idx) {
   ivec2 sz = textureSize(data_in, 0);
-  vec4 v = texelFetch(data_in, ivec2(idx / sz.x, idx % sz.x), 0);
+  vec4 v = texelFetch(data_in, ivec2(idx % sz.x, idx / sz.x), 0);
   idx += 1;
   return v;
 }
