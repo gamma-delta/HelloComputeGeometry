@@ -12,8 +12,13 @@ struct Vertex {
   vec2 _scratch;
 };
 
+// IN FLOATS
+#define SIZEOF_VERTEX ((4 + 4 + 2 + 2))
+
 struct Triangle {
   Vertex verts[3];
 };
+
+#define SIZEOF_TRIANGLE ((3 * SIZEOF_VERTEX))
 
 #endif

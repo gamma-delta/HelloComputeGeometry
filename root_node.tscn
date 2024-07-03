@@ -1,12 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://cw3t51s6rf6bf"]
+[gd_scene load_steps=7 format=3 uid="uid://cw3t51s6rf6bf"]
 
 [ext_resource type="Script" path="res://RootNode.gd" id="1_nmyyx"]
+[ext_resource type="Shader" path="res://shaders/display_image.gdshader" id="2_baoxi"]
 
 [sub_resource type="TorusMesh" id="TorusMesh_h06dq"]
 
 [sub_resource type="Environment" id="Environment_jvhoa"]
 ambient_light_source = 2
 ambient_light_color = Color(0.411765, 0.411765, 0.411765, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b64mh"]
+render_priority = 0
+shader = ExtResource("2_baoxi")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_eg3mr"]
+material = SubResource("ShaderMaterial_b64mh")
+size = Vector2(4, 4)
 
 [node name="RootNode" type="Node3D"]
 script = ExtResource("1_nmyyx")
@@ -19,3 +28,7 @@ current = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.00898153, 0.774161, -0.632925, -0.0109846, 0.632989, 0.774083, 0.999899, -4.65708e-10, 0.0141891, -6.55135, 2.49434, 0)
+
+[node name="Screen" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("PlaneMesh_eg3mr")
