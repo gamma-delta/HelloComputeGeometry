@@ -22,10 +22,13 @@ func _ready():
 func _process(delta):
   if self.rd == null:
     self.init_gpu()
-  var mesh_data := format_mesh(self.MY_MESH, self.in_buf_scratch)  
+
+  var mesh_data := format_mesh(self.MY_MESH, self.in_buf_scratch)
+
   self.out_buf_scratch.resize(self.in_buf_scratch.size() * MAX_GENERATED_TRIS_PER_TRI)
   rd.buffer_update(self.compute_stuff["in_buf_rid"], 0, self.in_buf_scratch.size(), self.in_buf_scratch)
 
+  
   var misc_buf := PackedByteArray()
   misc_buf.append_array(PackedFloat32Array([Time.get_unix_time_from_system()]).to_byte_array())
   rd.buffer_update(self.compute_stuff["misc_buf_rid"], 0, misc_buf.size(), misc_buf)
@@ -38,20 +41,18 @@ func _process(delta):
   var needed_dispatch_count : int = mesh_data["tri_count"] / 32
   rd.compute_list_dispatch(compute_list, needed_dispatch_count, 1, 1)
   rd.compute_list_end()
-  rd.submit()
-  rd.sync()
-
-  """
+  
   var draw_rd := RenderingServer.get_rendering_device()
+  # this crashes on older versions of godot
+  # see: https://github.com/godotengine/godot/issues/88580
   var draw_list := draw_rd.draw_list_begin_for_screen()
   draw_rd.draw_list_bind_render_pipeline(draw_list, self.draw_stuff["pipeline"])
   draw_rd.draw_list_bind_uniform_set(draw_list, self.draw_stuff["uniform_set"], 0)
-  draw_rd.draw_list_draw(draw_list, false, 0, mesh_data["tri_count"] * 3)
+  draw_rd.draw_list_draw(draw_list, false, 0, 3)
   draw_rd.draw_list_end()
-  """
 
 func init_gpu():
-  self.rd = RenderingServer.create_local_rendering_device()
+  self.rd = RenderingServer.get_rendering_device()
   self.init_compute()
   self.init_draw()
 
@@ -98,12 +99,17 @@ func init_draw():
   var shader_spirv : RDShaderSPIRV = shader_file.get_spirv()
   var shader_rid := rd.shader_create_from_spirv(shader_spirv)
   
-  var misc_buf_rid := rd.storage_buffer_create(16)
+  var dummy_verts_buf = PackedFloat32Array([
+    0, 0, 0, 0,
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+  ]).to_byte_array()
+  var verts_buf_rid := rd.storage_buffer_create(dummy_verts_buf.size(), dummy_verts_buf)
   
   var vert_buf_uniform := RDUniform.new()
   vert_buf_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER  
   vert_buf_uniform.binding = 0
-  vert_buf_uniform.add_id(self.compute_stuff["out_buf_rid"])
+  vert_buf_uniform.add_id(verts_buf_rid)
   #var misc_buf_uniform := RDUniform.new()
   #misc_buf_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
   #misc_buf_uniform.binding = 0
@@ -112,7 +118,7 @@ func init_draw():
   var uniform_set := rd.uniform_set_create([
     vert_buf_uniform, #misc_buf_uniform
   ], shader_rid, 0)
-  
+      
   # https://github.com/godotengine/godot/issues/78514
   # https://github.com/godotengine/godot/blob/f0d15bbfdfde1c1076903afb7a7db373580d5534/servers/rendering/rendering_device.cpp#L6559
   # Much of this is not documented, but the comments in the src code are good
@@ -135,6 +141,7 @@ func init_draw():
   
   self.draw_stuff["shader_rid"] = shader_rid
   # self.draw_stuff["misc_buf_rid"] = misc_buf_rid
+  self.draw_stuff["verts_buf_rid"] = verts_buf_rid
   self.draw_stuff["uniform_set"] = uniform_set
   self.draw_stuff["pipeline"] = pipeline
 

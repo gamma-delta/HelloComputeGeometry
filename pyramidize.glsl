@@ -4,19 +4,17 @@
 #include "types.glsl"
 
 layout(set = 0, binding = 0, std430) readonly buffer DataIn {
-  Vertex verts[];
+  // Vertex verts[];
+  vec4 positions[];
 } DATA_IN;
 // layout(set = 0, binding = 1, std430) restrict buffer Misc {
 //   mat4x4 projection;
 // } MISC;
 
-layout(location = 0) out vec2 uv_vary;
+// layout(location = 0) out vec2 uv_vary;
 
 void main() {
-  Vertex vert = DATA_IN.verts[gl_VertexIndex];
-  
-  gl_Position = vec4(vert.position.xyz, 1.0);
-  uv_vary = vert.uv;
+  gl_Position = vec4(DATA_IN.positions[gl_VertexIndex].xyz, 1.0);
 }
 
 // ===== //
@@ -26,10 +24,8 @@ void main() {
 
 #include "types.glsl"
 
-layout(location = 0) in vec2 uv_vary;
-
 layout(location = 0) out vec3 frag_color;
 
 void main() {
-  frag_color = vec3(uv_vary.x, uv_vary.y, 0.0);
+  frag_color = vec3(1.0, 1.0, 0.0);
 }
