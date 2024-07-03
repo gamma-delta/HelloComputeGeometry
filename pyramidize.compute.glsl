@@ -4,6 +4,7 @@
 #include "types.glsl"
 
 // https://ktstephano.github.io/rendering/opengl/ssbos
+// https://stackoverflow.com/questions/69497498/updating-vertices-from-compute-shader
 
 
 layout(local_size_x = 32, local_size_y = 1, local_size_z = 1) in;

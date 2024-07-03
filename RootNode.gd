@@ -27,7 +27,6 @@ func _process(delta):
 
   self.out_buf_scratch.resize(self.in_buf_scratch.size() * MAX_GENERATED_TRIS_PER_TRI)
   rd.buffer_update(self.compute_stuff["in_buf_rid"], 0, self.in_buf_scratch.size(), self.in_buf_scratch)
-
   
   var misc_buf := PackedByteArray()
   misc_buf.append_array(PackedFloat32Array([Time.get_unix_time_from_system()]).to_byte_array())
@@ -48,6 +47,7 @@ func _process(delta):
   var draw_list := draw_rd.draw_list_begin_for_screen()
   draw_rd.draw_list_bind_render_pipeline(draw_list, self.draw_stuff["pipeline"])
   draw_rd.draw_list_bind_uniform_set(draw_list, self.draw_stuff["uniform_set"], 0)
+  draw_rd.draw_list_bind_vertex_array(draw_list)
   draw_rd.draw_list_draw(draw_list, false, 0, 3)
   draw_rd.draw_list_end()
 
@@ -105,6 +105,10 @@ func init_draw():
     0, 1, 0, 0,
   ]).to_byte_array()
   var verts_buf_rid := rd.storage_buffer_create(dummy_verts_buf.size(), dummy_verts_buf)
+
+  var dummy_verts_array_rid := rd.vertex_array_create(3,
+    RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT,
+    dummy_verts_buf)
   
   var vert_buf_uniform := RDUniform.new()
   vert_buf_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER  

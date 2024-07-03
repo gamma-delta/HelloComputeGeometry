@@ -3,10 +3,8 @@
 
 #include "types.glsl"
 
-layout(set = 0, binding = 0, std430) readonly buffer DataIn {
-  // Vertex verts[];
-  vec4 positions[];
-} DATA_IN;
+layout(binding = 0, std430) in vec4 position;
+
 // layout(set = 0, binding = 1, std430) restrict buffer Misc {
 //   mat4x4 projection;
 // } MISC;
@@ -14,7 +12,7 @@ layout(set = 0, binding = 0, std430) readonly buffer DataIn {
 // layout(location = 0) out vec2 uv_vary;
 
 void main() {
-  gl_Position = vec4(DATA_IN.positions[gl_VertexIndex].xyz, 1.0);
+  gl_Position = vec4(position.xyz, 1.0);
 }
 
 // ===== //
