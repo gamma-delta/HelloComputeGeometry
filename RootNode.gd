@@ -1,6 +1,7 @@
 extends Node3D
 
 @export var MY_MESH : Mesh
+@export var DISPLAY_MESH : MeshInstance3D
 
 var rd : RenderingDevice
 var compute_stuff := {}
@@ -23,10 +24,11 @@ const TEXTURE_SIZE := 512 # a guess
 func _ready():
   RenderingServer.call_on_render_thread(self.init_gpu)
   
-  var screen := $Screen as MeshInstance3D
-  var mat := screen.get_active_material(0) as ShaderMaterial
+  var mat := DISPLAY_MESH.material_override as ShaderMaterial
   self.shader_texture = Texture2DRD.new()
   mat.set_shader_parameter("data_in", self.shader_texture)
+  
+  DISPLAY_MESH.mesh = self.make_dummy_arraymesh(self.tri_count)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -114,6 +116,26 @@ func compute_frame():
   var needed_dispatch_count : int = self.tri_count / 32
   rd.compute_list_dispatch(compute_list, needed_dispatch_count, 1, 1)
   rd.compute_list_end()
+
+# https://github.com/erickweil/GodotTests/blob/38237af0bd88dfcc39ec2480fbb84a674ab7c9e2/ProceduralGeometry/ProceduralGeometry.cs#L123
+func make_dummy_arraymesh(tri_count: int):
+  var indices := PackedInt32Array()
+  indices.resize(tri_count * 3)
+  for i in range(0, tri_count):
+    indices[3*i + 0] = 3*i + 0
+    indices[3*i + 1] = 3*i + 1
+    indices[3*i + 2] = 3*i + 2
+
+  var surfaces := []
+  surfaces.resize(ArrayMesh.ARRAY_MAX)
+  surfaces[ArrayMesh.ARRAY_INDEX] = indices
+  # Need a dummy array
+  surfaces[ArrayMesh.ARRAY_VERTEX] = PackedVector3Array([Vector3.ZERO])
+  
+  var flags := ArrayMesh.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY
+  var mesh := ArrayMesh.new()
+  mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, surfaces, [], {}, flags)
+  return mesh
 
 static func format_mesh(mesh: Mesh, tris_buf: PackedByteArray) -> Dictionary:
   var surf1 := mesh.surface_get_arrays(0)
