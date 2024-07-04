@@ -1,23 +1,58 @@
-[gd_scene load_steps=7 format=3 uid="uid://cw3t51s6rf6bf"]
+[gd_scene load_steps=12 format=3 uid="uid://cw3t51s6rf6bf"]
 
-[ext_resource type="Script" path="res://RootNode.gd" id="1_nmyyx"]
-[ext_resource type="Shader" path="res://shaders/display_image.gdshader" id="2_baoxi"]
+[ext_resource type="Script" path="res://root_node.gd" id="1_twgfh"]
+[ext_resource type="Shader" path="res://lib/unpack_verts_from_compute.gdshader" id="2_baoxi"]
 [ext_resource type="Script" path="res://FreeLookCamera.gd" id="2_vtr0j"]
 
-[sub_resource type="TorusMesh" id="TorusMesh_h06dq"]
-
-[sub_resource type="Environment" id="Environment_jvhoa"]
-ambient_light_source = 2
-ambient_light_color = Color(0.411765, 0.411765, 0.411765, 1)
+[sub_resource type="TorusMesh" id="TorusMesh_jwaln"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c17xg"]
 render_priority = 0
 shader = ExtResource("2_baoxi")
 
-[node name="RootNode" type="Node3D" node_paths=PackedStringArray("DISPLAY_MESH")]
-script = ExtResource("1_nmyyx")
-MY_MESH = SubResource("TorusMesh_h06dq")
-DISPLAY_MESH = NodePath("DisplayMesh")
+[sub_resource type="TorusMesh" id="TorusMesh_iqwc3"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_e7dlk"]
+size = Vector2(32, 32)
+subdivide_width = 32
+subdivide_depth = 32
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xdxu5"]
+
+[sub_resource type="Sky" id="Sky_cs3x1"]
+sky_material = SubResource("ProceduralSkyMaterial_xdxu5")
+
+[sub_resource type="Environment" id="Environment_vurpw"]
+sky = SubResource("Sky_cs3x1")
+
+[sub_resource type="Environment" id="Environment_jvhoa"]
+ambient_light_source = 2
+ambient_light_color = Color(0.411765, 0.411765, 0.411765, 1)
+
+[node name="RootNode" type="Node3D" node_paths=PackedStringArray("mesh_display")]
+script = ExtResource("1_twgfh")
+mesh_in = SubResource("TorusMesh_jwaln")
+mesh_display = NodePath("World/MeshDisplay")
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="MeshDisplay" type="MeshInstance3D" parent="World"]
+material_override = SubResource("ShaderMaterial_c17xg")
+custom_aabb = AABB(-10, -10, -10, 20, 20, 20)
+ignore_occlusion_culling = true
+mesh = SubResource("TorusMesh_iqwc3")
+skeleton = NodePath("../..")
+
+[node name="Ground" type="MeshInstance3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
+mesh = SubResource("PlaneMesh_e7dlk")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World"]
+environment = SubResource("Environment_vurpw")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.00898153, 0.774161, -0.632925, -0.0109846, 0.632989, 0.774083, 0.999899, -1.90903e-08, 0.0141891, -6.55135, 2.49434, 0)
+shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.69079)
@@ -25,8 +60,5 @@ environment = SubResource("Environment_jvhoa")
 current = true
 script = ExtResource("2_vtr0j")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.00898153, 0.774161, -0.632925, -0.0109846, 0.632989, 0.774083, 0.999899, -4.65708e-10, 0.0141891, -6.55135, 2.49434, 0)
-
-[node name="DisplayMesh" type="MeshInstance3D" parent="."]
-material_override = SubResource("ShaderMaterial_c17xg")
+[node name="SpotLight3D" type="SpotLight3D" parent="Camera3D"]
+shadow_enabled = true

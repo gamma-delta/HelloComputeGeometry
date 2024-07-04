@@ -30,6 +30,9 @@ func write_vec4(v: Vector4):
   self.write_float(v.z)
   self.write_float(v.w)
 
+func write_pba(pba: PackedByteArray):
+  self.inner.append_array(pba)
+
 func skip(bytes: int):
   self.inner.resize(self.size() + bytes)
 

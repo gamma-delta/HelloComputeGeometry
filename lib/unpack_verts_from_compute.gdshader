@@ -19,6 +19,8 @@ void vertex() {
 
 void fragment() {
   ALBEDO = vec3(0.0, 1.0, 0.0);
+  // METALLIC = 0.95;
+  ROUGHNESS = 0.1;
 }
 
 //void light() {
