@@ -1,6 +1,6 @@
 # Hello, Compute Geometry!
 
-![images/suzanne_having_a_bad_day.png]
+![Suzanne, the blender monkey, with each of her triangles puckering outwards.](images/suzanne_having_a_bad_day.png)
 
 This is a tech demo for mocking geometry shaders in Godot using compute shaders.
 Take input data, and produce a varying number of triangles from it.
