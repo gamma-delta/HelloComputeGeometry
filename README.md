@@ -46,15 +46,15 @@ The Godot shader that unpacks the vertices from the texture is `shaders/unpack_v
 The source code has a lot of links to stuff I found was helpful at the moment, but not all of it is the best.
 Here's my curated list of citations:
 
-- [`https://github.com/erickweil/GodotTests/tree/main/ProceduralGeometry`].
+- `[https://github.com/erickweil/GodotTests/tree/main/ProceduralGeometry]`.
   This was my main source; thanks Erick!
-- [`https://learnopengl.com/Guest-Articles/2022/Compute-Shaders/Introduction`].
+- `[https://learnopengl.com/Guest-Articles/2022/Compute-Shaders/Introduction]`.
   Easy-to-digest rudiments of compute shaders.
-- [`https://ktstephano.github.io/rendering/opengl/prog_vtx_pulling`].
-- [`https://stackoverflow.com/q/38172696`].
+- `[https://ktstephano.github.io/rendering/opengl/prog_vtx_pulling]`.
+- `[https://stackoverflow.com/q/38172696]`.
   OpenGL expects the data being sent to anything on the GPU to be packed in a certain way, and it's a giant footgun.
   This is why there is a `_scratch` variable in the `Vertex` struct, and why I'm using `vec4`s instead of `vec3`s.
-- [`https://www.khronos.org/opengl/wiki/Compute_Shader`]. The wiki is kind of spotty, but sometimes helpful.
+- `[https://www.khronos.org/opengl/wiki/Compute_Shader]`. The wiki is kind of spotty, but sometimes helpful.
 
 If you don't understand how something works, open an issue please!
 I was tearing my hair out trying to figure out how to do this, and I'd love if this repo was a helpful source if you want to do the same.
