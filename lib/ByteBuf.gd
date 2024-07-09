@@ -1,3 +1,5 @@
+# Helper class I wrote to read values out of a PackedByteArray
+
 class_name ByteBuf extends RefCounted
 
 var inner : PackedByteArray

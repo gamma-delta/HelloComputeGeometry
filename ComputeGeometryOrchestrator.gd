@@ -1,13 +1,14 @@
 class_name ComputeGeometryOrchestrator extends RefCounted
 
 # The main logic goes here.
-# The script on the RootNode changes the mesh in on mouse click
+# The script on the RootNode changes the mesh input on number keys
 
 var mesh_displayer : MeshInstance3D
 
+# Handy pointer to the main rendering device
 var rd : RenderingDevice
+# To avoid having a billion variables everywhere, all the RIDs are stored in here
 var compute_stuff := {}
-var draw_stuff := {}
 
 var in_buf_scratch := PackedByteArray()
 var shader_texture : Texture2DRD
@@ -135,7 +136,11 @@ func _init_gpu():
 
 func _compute_frame():
   if self.mesh_in_dirty:
-    rd.buffer_clear(self.compute_stuff["in_buf_rid"], 0, self.max_triangles * SIZE_OF_TRI     )
+    # We have to clear the entire input vertex buffer, otherwise old triangles will be left over,
+    # because buffer_update only overwrites as many bytes as is given.
+    # I'm not sure if this is slow; possibly you could extend in_buf_scratch to be the size
+    # of the whole GPU-side buffer and do it all in one operation
+    rd.buffer_clear(self.compute_stuff["in_buf_rid"], 0, self.max_triangles * SIZE_OF_TRI)
     rd.buffer_update(self.compute_stuff["in_buf_rid"], 0, self.in_buf_scratch.size(), self.in_buf_scratch)
   # reset counter
   rd.buffer_update(self.compute_stuff["atomics_at_home_rid"], 0, 4, PackedByteArray([0, 0, 0, 0]))

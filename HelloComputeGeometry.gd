@@ -1,5 +1,8 @@
 extends Node3D
 
+# Driver script for the demo
+# All the interesting code is in ComputeGeometryOrchestrator
+
 var cgo : ComputeGeometryOrchestrator
 
 @export var mesh_displayer : MeshInstance3D

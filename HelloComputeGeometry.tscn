@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://cw3t51s6rf6bf"]
+[gd_scene load_steps=16 format=3 uid="uid://cw3t51s6rf6bf"]
 
 [ext_resource type="Script" path="res://HelloComputeGeometry.gd" id="1_gffpr"]
 [ext_resource type="Shader" path="res://shaders/unpack_verts_from_compute.gdshader" id="2_baoxi"]
@@ -42,10 +42,6 @@ sky_material = SubResource("ProceduralSkyMaterial_xdxu5")
 [sub_resource type="Environment" id="Environment_vurpw"]
 sky = SubResource("Sky_cs3x1")
 
-[sub_resource type="Environment" id="Environment_jvhoa"]
-ambient_light_source = 2
-ambient_light_color = Color(0.411765, 0.411765, 0.411765, 1)
-
 [node name="RootNode" type="Node3D" node_paths=PackedStringArray("mesh_displayer")]
 script = ExtResource("1_gffpr")
 mesh_displayer = NodePath("World/MeshDisplay")
@@ -72,10 +68,8 @@ shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.69079)
-environment = SubResource("Environment_jvhoa")
 current = true
 script = ExtResource("2_vtr0j")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Camera3D"]
-visible = false
 shadow_enabled = true

@@ -23,6 +23,15 @@ struct Triangle {
   Vertex verts[3];
 };
 
+Triangle normalsFromPositions(Triangle trongle) {
+  Vertex verts[3] = trongle.verts;
+  vec3 normal = normalize(cross(verts[1].position.xyz - verts[0].position.xyz, verts[2].position.xyz - verts[0].position.xyz));
+  verts[0].normal = vec4(normal, 0.0);
+  verts[1].normal = vec4(normal, 0.0);
+  verts[2].normal = vec4(normal, 0.0);
+  return Triangle(verts);
+}
+
 #define SIZEOF_TRIANGLE ((3 * SIZEOF_VERTEX))
 
 layout(local_size_x = 32, local_size_y = 1, local_size_z = 1) in;
@@ -94,13 +103,13 @@ void main() {
 
   Triangle triOut = tri;
   triOut.verts[0] = center;
-  writeTriangle(triOut);
+  writeTriangle(normalsFromPositions(triOut));
   
   triOut = tri;
   triOut.verts[1] = center;
-  writeTriangle(triOut);
+  writeTriangle(normalsFromPositions(triOut));
 
   triOut = tri;
   triOut.verts[2] = center;
-  writeTriangle(triOut);
+  writeTriangle(normalsFromPositions(triOut));
 }

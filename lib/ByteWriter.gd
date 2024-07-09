@@ -1,3 +1,5 @@
+# Helper class I wrote to write values to a PackedByteArray
+
 class_name ByteWriter extends RefCounted
 
 var inner : PackedByteArray
