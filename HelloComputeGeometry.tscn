@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cw3t51s6rf6bf"]
+[gd_scene load_steps=17 format=3 uid="uid://cw3t51s6rf6bf"]
 
 [ext_resource type="Script" path="res://HelloComputeGeometry.gd" id="1_gffpr"]
 [ext_resource type="Shader" path="res://shaders/unpack_verts_from_compute.gdshader" id="2_baoxi"]
@@ -16,9 +16,14 @@ subdivide_depth = 6
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_p6wqt"]
 
+[sub_resource type="SystemFont" id="SystemFont_bwi4p"]
+font_names = PackedStringArray("Monospace")
+
 [sub_resource type="TextMesh" id="TextMesh_qrv5y"]
 text = "awagga"
+font = SubResource("SystemFont_bwi4p")
 font_size = 127
+depth = 0.5
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c17xg"]
 render_priority = 0
