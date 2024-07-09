@@ -1,16 +1,28 @@
-[gd_scene load_steps=12 format=3 uid="uid://cw3t51s6rf6bf"]
+[gd_scene load_steps=16 format=3 uid="uid://cw3t51s6rf6bf"]
 
-[ext_resource type="Script" path="res://root_node.gd" id="1_twgfh"]
-[ext_resource type="Shader" path="res://lib/unpack_verts_from_compute.gdshader" id="2_baoxi"]
-[ext_resource type="Script" path="res://FreeLookCamera.gd" id="2_vtr0j"]
+[ext_resource type="Script" path="res://HelloComputeGeometry.gd" id="1_gffpr"]
+[ext_resource type="Shader" path="res://shaders/unpack_verts_from_compute.gdshader" id="2_baoxi"]
+[ext_resource type="ArrayMesh" uid="uid://hxyq1veajvti" path="res://monkey.obj" id="2_lb38n"]
+[ext_resource type="Script" path="res://lib/FreeLookCamera.gd" id="2_vtr0j"]
 
-[sub_resource type="TorusMesh" id="TorusMesh_jwaln"]
+[sub_resource type="TorusMesh" id="TorusMesh_hlklk"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_l3bqw"]
+subdivide_width = 4
+subdivide_height = 5
+subdivide_depth = 6
+
+[sub_resource type="SphereMesh" id="SphereMesh_wc02f"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_p6wqt"]
+
+[sub_resource type="TextMesh" id="TextMesh_qrv5y"]
+text = "awagga"
+font_size = 127
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c17xg"]
 render_priority = 0
 shader = ExtResource("2_baoxi")
-
-[sub_resource type="TorusMesh" id="TorusMesh_iqwc3"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_e7dlk"]
 size = Vector2(32, 32)
@@ -29,10 +41,10 @@ sky = SubResource("Sky_cs3x1")
 ambient_light_source = 2
 ambient_light_color = Color(0.411765, 0.411765, 0.411765, 1)
 
-[node name="RootNode" type="Node3D" node_paths=PackedStringArray("mesh_display")]
-script = ExtResource("1_twgfh")
-mesh_in = SubResource("TorusMesh_jwaln")
-mesh_display = NodePath("World/MeshDisplay")
+[node name="RootNode" type="Node3D" node_paths=PackedStringArray("mesh_displayer")]
+script = ExtResource("1_gffpr")
+mesh_displayer = NodePath("World/MeshDisplay")
+meshes = Array[Mesh]([SubResource("TorusMesh_hlklk"), SubResource("BoxMesh_l3bqw"), SubResource("SphereMesh_wc02f"), SubResource("CapsuleMesh_p6wqt"), SubResource("TextMesh_qrv5y"), ExtResource("2_lb38n")])
 
 [node name="World" type="Node3D" parent="."]
 
@@ -40,7 +52,6 @@ mesh_display = NodePath("World/MeshDisplay")
 material_override = SubResource("ShaderMaterial_c17xg")
 custom_aabb = AABB(-10, -10, -10, 20, 20, 20)
 ignore_occlusion_culling = true
-mesh = SubResource("TorusMesh_iqwc3")
 skeleton = NodePath("../..")
 
 [node name="Ground" type="MeshInstance3D" parent="World"]
@@ -61,4 +72,5 @@ current = true
 script = ExtResource("2_vtr0j")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Camera3D"]
+visible = false
 shadow_enabled = true

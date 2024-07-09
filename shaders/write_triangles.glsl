@@ -44,7 +44,8 @@ layout(push_constant, std430) uniform Params {
   uint out_tex_width;
   uint out_tex_height;
   uint max_tris_per_tri;
-  
+  // Everything above this line is mandatory
+  // I also just have the time here for example purposes
   float time;
 } PARAMS;
 
@@ -71,12 +72,35 @@ void writeTriangle(Triangle tri) {
   writeVertex(triIdx * 3 + 2, tri.verts[2]);
 }
 
-// @@USER_CODE@@
-
 void main() {
   if (gl_GlobalInvocationID.x >= gl_WorkGroupSize.x * gl_NumWorkGroups.x) return;
 
   Triangle tri = DATA_IN.tris[gl_GlobalInvocationID.x];
 
-  writeTriangle(tri);
+  // Your interesting user code goes here.
+
+/*
+    0
+   /|\
+  / X \
+ / / \ \
+1-------2
+*/
+
+  vec4 center_pos = (tri.verts[0].position + tri.verts[1].position + tri.verts[2].position) / 3.0;
+  vec4 avg_norm = (tri.verts[0].normal + tri.verts[1].normal + tri.verts[2].normal) / 3.0;
+  vec4 spine_out = center_pos + avg_norm * 0.05 * cos(PARAMS.time);
+  Vertex center = Vertex(spine_out, avg_norm, vec2(0), vec2(0));
+
+  Triangle triOut = tri;
+  triOut.verts[0] = center;
+  writeTriangle(triOut);
+  
+  triOut = tri;
+  triOut.verts[1] = center;
+  writeTriangle(triOut);
+
+  triOut = tri;
+  triOut.verts[2] = center;
+  writeTriangle(triOut);
 }

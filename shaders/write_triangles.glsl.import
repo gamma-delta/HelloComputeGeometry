@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://d1kq6fad8v7dm"
+path="res://.godot/imported/write_triangles.glsl-774c94df21eb4a64e0dc4e8bec2480f1.res"
+
+[deps]
+
+source_file="res://shaders/write_triangles.glsl"
+dest_files=["res://.godot/imported/write_triangles.glsl-774c94df21eb4a64e0dc4e8bec2480f1.res"]
+
+[params]
+
